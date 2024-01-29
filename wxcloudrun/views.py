@@ -1,11 +1,16 @@
 from datetime import datetime
 from flask import render_template, request
+from qcloud_cos import CosS3Client, CosClientError, CosServiceError
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.dao import insert_score, query_score_by_id, query_score_by_user, delete_score_by_id, delete_score_by_user
 from wxcloudrun.model import Counters, Score
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, score_char_response, score_time_response
 from wxcloudrun.runmodel import test_model
+from wxcloudrun.cosbrowser import initcos
+
+# 不要动，这里是全局变量
+client
 
 # 激活环境
 @app.route('/init', methods=['GET'])
@@ -14,7 +19,24 @@ def init():
     :return: success
     '''
     query_score_by_id(1)
-    return make_succ_empty_response()
+    # 初始化cos
+    global client
+    client = initcos()
+    # 下载模型文件
+    bucket = "7072-prod-5g5ivxm6945fbe76-1320253797"
+    model_path = "model/model-e86.pt"
+    local_path = "./model/model.pt"
+    try:
+        f = open('./model/model.pt', 'r')
+        f.close()
+    except FileNotFoundError:
+        for i in range(0, 3):
+            try:
+                client.download_file(Bucket=bucket, Key=model_path, DestFilePath=local_path)
+                break
+            except CosClientError or CosServiceError as e:
+                print(e)
+        return make_succ_empty_response()
 
 # 上传图片评分
 @app.route('/api/sendImage', methods=['POST'])

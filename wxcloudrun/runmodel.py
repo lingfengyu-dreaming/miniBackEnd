@@ -76,7 +76,6 @@ class OCR_model(nn.Module):
 
 # 测试模型的函数
 def test_model():
-    epoch = 86
     test_path = './image/'  # 测试集路径
     batch_size = 1
     lr = 0.01
@@ -92,7 +91,7 @@ def test_model():
     params = filter(lambda p: p.requires_grad, model.parameters())
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(params, lr, weight_decay=1e-4)
-    model.load_state_dict(torch.load(f'./model/model-e{epoch}.pt'))
+    model.load_state_dict(torch.load(f'./model/model.pt'))
     model.eval()
     with torch.no_grad():
         for x, y in dataloader:
