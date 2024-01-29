@@ -2,8 +2,91 @@ from datetime import datetime
 from flask import render_template, request
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
-from wxcloudrun.model import Counters
-from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
+from wxcloudrun.dao import insert_score, query_score_by_id, query_score_by_user, delete_score_by_id, delete_score_by_user
+from wxcloudrun.model import Counters, Score
+from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, score_char_response, score_time_response
+from wxcloudrun.runmodel import test_model
+
+# 激活环境
+@app.route('/init', methods=['GET'])
+def init():
+    '''
+    :return: success
+    '''
+    query_score_by_id(1)
+    return make_succ_empty_response()
+
+# 上传图片评分
+@app.route('/api/sendImage', methods=['POST'])
+def scoreImage():
+    """
+    :params:
+    :input:
+    :openid:从用户信息中提取
+    :fileid:用户上传图片文件id,从参数中获取
+    :
+    :return:
+    :score:返回成绩
+    """
+    # 从微信调用
+    if request.header['X-WX-SOURCE']:
+        openid = request.header['X-WX-OPENID']
+    # 从统一小程序调用
+    else:
+        openid = request.header['X-WX-UNIONID']
+    params = request.get_json()
+    if 'action' not in params:
+        return make_err_response('缺少action参数')
+    else:
+        action = params['action']
+    fileid = params['fileid']
+    if action == 'score':
+        char, score = test_model()
+        scoreitem = Score()
+        scoreitem.user = openid
+        scoreitem.fileid = fileid
+        scoreitem.char = char
+        scoreitem.score = score
+        insert_score(scoreitem)
+    else:
+        return make_err_response('action参数错误')
+    return score_char_response(char, score)
+
+# 查询评分
+@app.route('/api/checkScore', method=['POST'])
+def queryScore():
+    """
+    :params:
+    :openid:从用户信息中提取
+    :id:可选id
+    :
+    :return:
+    :score:评分
+    :time:时间
+    """
+    params = request.get_json()
+    # 从微信小程序调用
+    if request.header['X-WX-SOURCE']:
+        openid = request.header['X-WX-OPENID']
+    # 从统一小程序调用
+    else:
+        openid = request.header['X-WX-UNIONID']
+    if 'action' not in params:
+        return make_err_response('缺少action参数')
+    else:
+        action = params['action']
+    if action == 'user':
+        scoreitem = query_score_by_user(openid)
+        if scoreitem is None:
+            return make_err_response('未找到数据')
+        else:
+            return score_time_response(scoreitem.char, scoreitem.score, scoreitem.time)
+    elif action == 'id':
+        scoreitem = query_score_by_id(params.data['id'])
+        if scoreitem is None:
+            return make_err_response('未找到数据')
+        else:
+            return score_time_response(scoreitem.char, scoreitem.score, scoreitem.time)
 
 
 @app.route('/')

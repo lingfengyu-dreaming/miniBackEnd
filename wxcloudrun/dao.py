@@ -3,10 +3,80 @@ import logging
 from sqlalchemy.exc import OperationalError
 
 from wxcloudrun import db
-from wxcloudrun.model import Counters
+from wxcloudrun.model import Counters, Score
 
 # 初始化日志
 logger = logging.getLogger('log')
+
+def insert_score(Score):
+    '''
+    根据用户id添加记录
+    :param:
+    :Score:Score对象
+    '''
+    try:
+        db.session.add(Score)
+        db.session.commit()
+    except OperationalError as e:
+        logger.info(f"insert Score error with {e}")
+
+def query_score_by_id(id):
+    '''
+    根据id查询Score
+    :param:
+    :id:Score的id
+    :return:
+    :Score对象
+    '''
+    try:
+        return Score.query.filter(Score.id == id).first()
+    except OperationalError as e:
+        logger.info(f"query Score by id error with {e}")
+        return None
+
+def query_score_by_user(user):
+    '''
+    根据用户id查询Score
+    :param:
+    :user:Score的user
+    :return:
+    :Score数组?
+    '''
+    try:
+        return Score.query.filter(Score.user == user)
+    except OperationalError as e:
+        logger.info(f"query Score by user openid error with {e}")
+        return None
+
+def delete_score_by_id(id):
+    '''
+    根据id删除记录
+    :param:
+    :id:Score的id
+    '''
+    try:
+        Score = Score.query.get(id)
+        if Score is None:
+            return
+        db.session.delete(Score)
+        db.session.commit()
+    except OperationalError as e:
+        logger.info(f"delete Score by id error with {e}")
+
+def delete_score_by_user(user):
+    '''
+    根据user删除记录
+    :param:
+    :user:Score的user
+    '''
+    try:
+        Score = Score.query.filter(Score.user == user)
+        if Score is None:
+            return
+        db.session.delete(Score)
+        db.session.commit()
+    except OperationalError as e:
+        logger.info(f"delete Score by user error with {e}")
 
 
 def query_counterbyid(id):
