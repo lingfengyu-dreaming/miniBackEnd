@@ -4,7 +4,9 @@
 FROM pytorch/pytorch:2.1.2-cuda12.1-cudnn8-runtime
 
 # 容器默认时区为UTC，如需使用上海时间请启用以下时区设置命令
-RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+# RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+ENV TZ=Asia/Shanghai 
+RUN echo "${TZ}" > /etc/timezone && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && apt update && apt install -y tzdata && rm -rf /var/lib/apt/lists/*
 
 # 使用 HTTPS 协议访问容器云调用证书安装
 RUN apk add ca-certificates
