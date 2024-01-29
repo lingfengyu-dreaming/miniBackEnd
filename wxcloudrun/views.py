@@ -13,7 +13,7 @@ from wxcloudrun.cosbrowser import initcos
 client
 
 # 激活环境
-@app.route('/init', methods=['GET'])
+@app.route('/init')
 def init():
     '''
     :return: success
@@ -75,7 +75,7 @@ def scoreImage():
     return score_char_response(char, score)
 
 # 查询评分
-@app.route('/api/checkScore', method=['POST'])
+@app.route('/api/checkScore', methods=['POST'])
 def queryScore():
     """
     :params:
