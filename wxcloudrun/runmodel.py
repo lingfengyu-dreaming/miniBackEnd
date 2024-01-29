@@ -99,7 +99,7 @@ def test_model():
             x, y = x.to(device), y.to(device)
             pred = model(x)
             char = pred.argmax(1)
-            score = pred.find(char)
+            score = int(pred[0][char].item()) + 1
             return char, score
 
 # if __name__ == '__main__':
