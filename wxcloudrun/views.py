@@ -38,7 +38,8 @@ def init():
                 break
             except CosClientError or CosServiceError as e:
                 print(e)
-        return make_succ_empty_response()
+    finally:
+        return make_succ_response({"msg": "load success"})
 
 # 上传图片评分
 @app.route('/api/sendImage', methods=['POST'])
@@ -53,10 +54,10 @@ def scoreImage():
     :score:返回成绩
     """
     # 从微信调用
-    if request.headers['X-WX-SOURCE']:
+    try:
         openid = request.headers['X-WX-OPENID']
     # 从统一小程序调用
-    else:
+    except KeyError:
         openid = request.headers['X-WX-UNIONID']
     params = request.get_json()
     if 'action' not in params:
@@ -90,10 +91,10 @@ def queryScore():
     """
     params = request.get_json()
     # 从微信小程序调用
-    if request.headers['X-WX-SOURCE']:
+    try:
         openid = request.headers['X-WX-OPENID']
     # 从统一小程序调用
-    else:
+    except KeyError:
         openid = request.headers['X-WX-UNIONID']
     if 'action' not in params:
         return make_err_response('缺少action参数')
@@ -111,6 +112,25 @@ def queryScore():
             return make_err_response('未找到数据')
         else:
             return score_time_response(scoreitem.char, scoreitem.score, scoreitem.time)
+
+# 获取openid
+@app.route('/api/getOpenid')
+def getopenid():
+    """
+    :params:
+    :openid:从用户信息中提取
+    :return:
+    :openid:返回提取的openid
+    """
+    params = request.get_json()
+    try:
+        openid = request.headers['X-WX-OPENID']
+    except KeyError:
+        openid = request.headers['X-WX-UNIONID']
+    if openid:
+        return make_succ_response({"openid": openid})
+    else:
+        return make_err_response("no openid")
 
 # @app.route('/')
 # def index():
