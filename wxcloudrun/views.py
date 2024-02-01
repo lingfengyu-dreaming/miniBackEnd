@@ -51,11 +51,11 @@ def scoreImage():
     :score:返回成绩
     """
     # 从微信调用
-    if request.header['X-WX-SOURCE']:
-        openid = request.header['X-WX-OPENID']
+    if request.headers['X-WX-SOURCE']:
+        openid = request.headers['X-WX-OPENID']
     # 从统一小程序调用
     else:
-        openid = request.header['X-WX-UNIONID']
+        openid = request.headers['X-WX-UNIONID']
     params = request.get_json()
     if 'action' not in params:
         return make_err_response('缺少action参数')
@@ -88,11 +88,11 @@ def queryScore():
     """
     params = request.get_json()
     # 从微信小程序调用
-    if request.header['X-WX-SOURCE']:
-        openid = request.header['X-WX-OPENID']
+    if request.headers['X-WX-SOURCE']:
+        openid = request.headers['X-WX-OPENID']
     # 从统一小程序调用
     else:
-        openid = request.header['X-WX-UNIONID']
+        openid = request.headers['X-WX-UNIONID']
     if 'action' not in params:
         return make_err_response('缺少action参数')
     else:
