@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 def initcos():
     url = "http://api.weixin.qq.com/_/cos/getauth"
     res = requests.get(url)
-    info = json.loads(res)
+    info = json.loads(res.json())
     sec_id = info.TmpSecretId
     sec_key = info.TmpSecretKey
     token = info.Token
