@@ -10,7 +10,7 @@ from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import initcos
 
 # 不要动，这里是全局变量
-client
+client = None
 
 # 激活环境
 @app.route('/init')
