@@ -13,10 +13,10 @@ def initcos():
     url = "http://api.weixin.qq.com/_/cos/getauth"
     res = requests.get(url)
     info = res.json()
-    sec_id = info.TmpSecretId
-    sec_key = info.TmpSecretKey
-    token = info.Token
-    time = info.ExpiredTime
+    sec_id = info['TmpSecretId']
+    sec_key = info['TmpSecretKey']
+    token = info['Token']
+    time = info['ExpiredTime']
     region = 'ap-shanghai'
     config = CosConfig(Region=region, SecretId=sec_id, SecretKey=sec_key, Token=token, Timeout=time)
     client = CosS3Client(config)
