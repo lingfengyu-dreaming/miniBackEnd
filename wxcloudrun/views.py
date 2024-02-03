@@ -5,7 +5,7 @@ from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.dao import insert_score, query_score_by_id, query_score_by_user, delete_score_by_id, delete_score_by_user
 from wxcloudrun.model import Counters, Score
-from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, score_char_response, score_time_response
+from wxcloudrun.response import *
 from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import initcos
 import json
@@ -55,7 +55,7 @@ def scoreImage():
     :score:返回成绩
     """
     # 获取参数列表
-    params = json.loads(request.data)
+    params = json.loads(request.get_json())
     # 从微信调用
     try:
         openid = request.headers['X-WX-OPENID']
@@ -92,7 +92,7 @@ def queryScore():
     :time:时间
     """
     # 获取参数列表
-    params = json.loads(request.data)
+    params = json.loads(request.get_json())
     # 从微信小程序调用
     try:
         openid = request.headers['X-WX-OPENID']
@@ -117,7 +117,7 @@ def queryScore():
             return score_time_response(scoreitem.char, scoreitem.score, scoreitem.time)
 
 # 获取openid
-@app.route('/api/getOpenid')
+@app.route('/spe/getOpenid', methods=['POST'])
 def getopenid():
     """
     :params:
@@ -126,13 +126,14 @@ def getopenid():
     :openid:返回提取的openid
     """
     # 获取参数列表
-    params = json.loads(request.data)
+    params = json.loads(request.get_json())
+    return any_response(params)
     try:
-        openid = request.headers['X-WX-OPENID']
+        openid = request.headers['x-wx-openid']
     except KeyError:
         openid = request.headers['X-WX-UNIONID']
     if openid:
-        return make_succ_response({"openid": openid})
+        return make_succ_response({"openid": openid, "params": params})
     else:
         return make_err_response("no openid")
 

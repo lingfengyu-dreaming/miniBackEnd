@@ -12,4 +12,4 @@ matplotlib==3.8.0
 numpy==1.26.2
 opencv_python==4.8.1.78
 Pillow==10.1.0
-cos-python-sdk-v5==1.9.27
+cos-python-sdk-v5

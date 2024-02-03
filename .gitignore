@@ -1,1 +1,5 @@
 *.pt
+*.pyc
+dockerfile.development
+docker-compose.yml
+.cloudbase/container/debug.json
