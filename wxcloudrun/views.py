@@ -8,6 +8,7 @@ from wxcloudrun.model import Counters, Score
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, score_char_response, score_time_response
 from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import initcos
+import json
 
 # 不要动，这里是全局变量
 client = None
@@ -53,13 +54,14 @@ def scoreImage():
     :return:
     :score:返回成绩
     """
+    # 获取参数列表
+    params = json.loads(request.data)
     # 从微信调用
     try:
         openid = request.headers['X-WX-OPENID']
     # 从统一小程序调用
     except KeyError:
         openid = request.headers['X-WX-UNIONID']
-    params = request.get_json()
     if 'action' not in params:
         return make_err_response('缺少action参数')
     else:
@@ -89,7 +91,8 @@ def queryScore():
     :score:评分
     :time:时间
     """
-    params = request.get_json()
+    # 获取参数列表
+    params = json.loads(request.data)
     # 从微信小程序调用
     try:
         openid = request.headers['X-WX-OPENID']
@@ -122,7 +125,8 @@ def getopenid():
     :return:
     :openid:返回提取的openid
     """
-    params = request.get_json()
+    # 获取参数列表
+    params = json.loads(request.data)
     try:
         openid = request.headers['X-WX-OPENID']
     except KeyError:
