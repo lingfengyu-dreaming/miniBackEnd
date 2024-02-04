@@ -59,8 +59,9 @@ def scoreImage():
         print("原数据为json")
     else:
         print("原数据类型有误")
+    print(data)
     print("这是打印的get_json的结果", data.get_json())
-    params = json.loads(data.get_json())
+    params = data.get_json()
     print(params)
     # 从微信调用
     try:
