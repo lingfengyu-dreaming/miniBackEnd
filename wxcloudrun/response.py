@@ -25,4 +25,4 @@ def score_time_response(char, score, time):
     return Response(data, mimetype='application/json')
 
 def any_response(data):
-    return Response(data, mimetype="application/text")
+    return Response(data, mimetype="text/plain")

@@ -2,9 +2,8 @@ from datetime import datetime
 from flask import render_template, request
 from qcloud_cos import CosS3Client, CosClientError, CosServiceError
 from run import app
-from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.dao import insert_score, query_score_by_id, query_score_by_user, delete_score_by_id, delete_score_by_user
-from wxcloudrun.model import Counters, Score
+from wxcloudrun.model import Score
 from wxcloudrun.response import *
 from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import initcos
@@ -122,81 +121,3 @@ def queryScore():
             return make_err_response('未找到数据')
         else:
             return score_time_response(scoreitem.char, scoreitem.score, scoreitem.time)
-
-# 获取openid
-@app.route('/spe/getOpenid', methods=['POST'])
-def getopenid():
-    """
-    :params:
-    :openid:从用户信息中提取
-    :return:
-    :openid:返回提取的openid
-    """
-    # 获取参数列表
-    params = json.loads(request.get_json())
-    return any_response(params)
-    try:
-        openid = request.headers['x-wx-openid']
-    except KeyError:
-        openid = request.headers['X-WX-UNIONID']
-    if openid:
-        return make_succ_response({"openid": openid, "params": params})
-    else:
-        return make_err_response("no openid")
-
-# @app.route('/')
-# def index():
-#     """
-#     :return: 返回index页面
-#     """
-#     return render_template('index.html')
-
-# @app.route('/api/count', methods=['POST'])
-# def count():
-#     """
-#     :return:计数结果/清除结果
-#     """
-
-#     # 获取请求体参数
-#     params = request.get_json()
-
-#     # 检查action参数
-#     if 'action' not in params:
-#         return make_err_response('缺少action参数')
-
-#     # 按照不同的action的值，进行不同的操作
-#     action = params['action']
-
-#     # 执行自增操作
-#     if action == 'inc':
-#         counter = query_counterbyid(1)
-#         if counter is None:
-#             counter = Counters()
-#             counter.id = 1
-#             counter.count = 1
-#             counter.created_at = datetime.now()
-#             counter.updated_at = datetime.now()
-#             insert_counter(counter)
-#         else:
-#             counter.id = 1
-#             counter.count += 1
-#             counter.updated_at = datetime.now()
-#             update_counterbyid(counter)
-#         return make_succ_response(counter.count)
-
-#     # 执行清0操作
-#     elif action == 'clear':
-#         delete_counterbyid(1)
-#         return make_succ_empty_response()
-
-#     # action参数错误
-#     else:
-#         return make_err_response('action参数错误')
-
-# @app.route('/api/count', methods=['GET'])
-# def get_count():
-#     """
-#     :return: 计数的值
-#     """
-#     counter = Counters.query.filter(Counters.id == 1).first()
-#     return make_succ_response(0) if counter is None else make_succ_response(counter.count)
