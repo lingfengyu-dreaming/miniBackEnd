@@ -98,13 +98,14 @@ def queryScore():
     :time:时间
     """
     # 获取参数列表
-    params = json.loads(request.get_json())
+    data = request
+    params = data.get_json()
     # 从微信小程序调用
     try:
-        openid = request.headers['X-WX-OPENID']
+        openid = data.headers['X-WX-OPENID']
     # 从统一小程序调用
     except KeyError:
-        openid = request.headers['X-WX-UNIONID']
+        openid = data.headers['X-WX-UNIONID']
     if 'action' not in params:
         return make_err_response('缺少action参数')
     else:
