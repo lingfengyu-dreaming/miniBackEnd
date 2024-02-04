@@ -50,12 +50,12 @@ def scoreImage():
     :input:
     :openid:从用户信息中提取
     :fileid:用户上传图片文件id,从参数中获取
-    :
     :return:
     :score:返回成绩
     """
     # 获取参数列表
     params = json.loads(request.get_json())
+    print("这是我要看的request：" , request)
     # 从微信调用
     try:
         openid = request.headers['X-WX-OPENID']
@@ -86,7 +86,6 @@ def queryScore():
     :params:
     :openid:从用户信息中提取
     :id:可选id
-    :
     :return:
     :score:评分
     :time:时间
