@@ -54,16 +54,20 @@ def scoreImage():
     :score:返回成绩
     """
     # 获取参数列表
-    data = request.get_json()
-    print("这是打印的get_json的结果", data)
-    params = json.loads(str(data).replace("'", "\""))
+    data = request
+    if data.is_json:
+        print("原数据为json")
+    else:
+        print("原数据类型有误")
+    print("这是打印的get_json的结果", data.get_json())
+    params = json.loads(data.get_json())
     print(params)
     # 从微信调用
     try:
-        openid = request.headers['X-WX-OPENID']
+        openid = data.headers['X-WX-OPENID']
     # 从统一小程序调用
     except KeyError:
-        openid = request.headers['X-WX-UNIONID']
+        openid = data.headers['X-WX-UNIONID']
     if 'action' not in params:
         return make_err_response('缺少action参数')
     else:
