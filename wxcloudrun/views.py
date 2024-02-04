@@ -54,8 +54,9 @@ def scoreImage():
     :score:返回成绩
     """
     # 获取参数列表
-    params = json.loads(request.get_json())
     print("这是我要看的request：" , request)
+    print("这是打印的get_json的结果", request.get_json())
+    params = json.loads(request.get_json())
     # 从微信调用
     try:
         openid = request.headers['X-WX-OPENID']
