@@ -7,10 +7,10 @@ from wxcloudrun.model import Score
 from wxcloudrun.response import *
 from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import *
-import json, logging
+import json
 
-# 全局变量
-log = logging.getLogger('log')
+# 全局变量，勿动
+client = initcos()
 
 # 激活环境
 @app.route('/init')
@@ -21,13 +21,14 @@ def init():
     # 初始化数据库
     # query_score_by_id(1)
     # 下载模型
-    status = download_model
-    if status:
-        log.info('下载模型成功')
-        return make_succ_response({"msg": "初始化成功"})
-    else:
-        log.info('下载模型失败')
-        return make_err_response('初始化失败')
+    # status = download_model
+    # if status:
+    #     print('下载模型成功')
+    #     return make_succ_response({"msg": "初始化成功"})
+    # else:
+    #     print('下载模型失败')
+    #     return make_err_response('初始化失败')
+    return make_succ_empty_response()
 
 # 上传图片评分
 @app.route('/api/sendImage', methods=['POST'])
@@ -59,18 +60,21 @@ def scoreImage():
     # except KeyError:
     # openid = data.headers['X-WX-UNIONID']
     if 'action' not in params:
+        print('缺少action参数')
         return make_err_response('缺少action参数')
     else:
         action = params['action']
     fileid = params['fileid']
     if action == 'score':
         # 下载图片
-        status = download_model()
+        status = download_model(client)
         if status:
-            status = download_image(fileid)
+            status = download_image(client, fileid)
             if status == False:
+                print('下载图片失败')
                 return make_err_response('服务器下载图片失败')
         else:
+            print('下载模型失败')
             return make_err_response('服务器初始化环境失败')
         char, score = test_model()
         # scoreitem = Score()
@@ -83,6 +87,7 @@ def scoreImage():
         return make_err_response('action参数错误')
     # time = datetime()
     if char == -1:
+        print('识别图片失败')
         return make_err_response('服务器识别图片错误')
     else:
         return score_char_response(char, score)

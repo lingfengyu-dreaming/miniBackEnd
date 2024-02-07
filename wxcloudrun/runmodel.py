@@ -97,9 +97,9 @@ def test_model():
         dataset = MyDataset(img, label)
         dataloader = DataLoader(dataset, batch_size)
         model = OCR_model(6495).to(device)
-        params = filter(lambda p: p.requires_grad, model.parameters())
-        criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(params, lr, weight_decay=1e-4)
+        # params = filter(lambda p: p.requires_grad, model.parameters())
+        # criterion = nn.CrossEntropyLoss()
+        # optimizer = optim.Adam(params, lr, weight_decay=1e-4)
         model.load_state_dict(torch.load(f'./model/model.pt'))
         model.eval()
     except:
