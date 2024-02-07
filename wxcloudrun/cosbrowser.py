@@ -26,7 +26,7 @@ def initcos():
     return client
 
 # 下载模型
-def download_model():
+def download_model(client):
     # 初始化cos
     # client = initcos()
     # 下载模型文件
@@ -50,7 +50,7 @@ def download_model():
     return False
 
 # 下载图片
-def download_image(fileid):
+def download_image(client, fileid):
     ls = fileid.split('/')
     log.info(f"ls:{ls}")
     print(f'ls:{ls}')

@@ -65,9 +65,13 @@ def scoreImage():
     fileid = params['fileid']
     if action == 'score':
         # 下载图片
-        status = download_model()
+        if (client):
+            status = download_model(client)
+        else:
+            client = initcos()
+            status = download_model(client)
         if status:
-            status = download_image(fileid)
+            status = download_image(client, fileid)
             if status == False:
                 print('下载图片失败')
                 return make_err_response('服务器下载图片失败')
