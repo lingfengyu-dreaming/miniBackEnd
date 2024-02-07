@@ -85,12 +85,14 @@ def test_model():
         device = 'cpu'
     img, label = getData(test_path)
     # img = Image.open(img)
+    if len(img) == 0:
+        return -1, -1
     dataset = MyDataset(img, label)
     dataloader = DataLoader(dataset, batch_size)
     model = OCR_model(6495).to(device)
-    params = filter(lambda p: p.requires_grad, model.parameters())
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(params, lr, weight_decay=1e-4)
+    # params = filter(lambda p: p.requires_grad, model.parameters())
+    # criterion = nn.CrossEntropyLoss()
+    # optimizer = optim.Adam(params, lr, weight_decay=1e-4)
     model.load_state_dict(torch.load(f'./model/model.pt'))
     model.eval()
     with torch.no_grad():

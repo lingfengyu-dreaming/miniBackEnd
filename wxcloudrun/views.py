@@ -18,7 +18,8 @@ def init():
     '''
     :return: success
     '''
-    query_score_by_id(1)
+    # 初始化数据库
+    # query_score_by_id(1)
     # 初始化cos
     global client
     client = initcos()
@@ -50,40 +51,58 @@ def scoreImage():
     :openid:从用户信息中提取
     :fileid:用户上传图片文件id,从参数中获取
     :return:
+    :char:返回字符
     :score:返回成绩
+    :time:返回当前时间
     """
     # 获取参数列表
     data = request
-    if data.is_json:
-        print("原数据为json")
-    else:
-        print("原数据类型有误")
-    print(data)
-    print("这是打印的get_json的结果", data.get_json())
+    # if data.is_json:
+    #     print("原数据为json")
+    # else:
+    #     print("原数据类型有误")
+    # print(data)
+    # print("这是打印的get_json的结果", data.get_json())
     params = data.get_json()
-    print(params)
+    # print(params)
     # 从微信调用
-    try:
-        openid = data.headers['X-WX-OPENID']
+    # try:
+    # openid = data.headers['X-WX-OPENID']
     # 从统一小程序调用
-    except KeyError:
-        openid = data.headers['X-WX-UNIONID']
+    # except KeyError:
+    # openid = data.headers['X-WX-UNIONID']
     if 'action' not in params:
         return make_err_response('缺少action参数')
     else:
         action = params['action']
     fileid = params['fileid']
     if action == 'score':
+        # 下载图片
+        ls = fileid.split('/')
+        bucket = ls[2].split('.')[1]
+        file_path = ls[3] + '/' + ls[4] + '/' + ls[5] + '/' + ls[6] + '/' + ls[7]
+        local_path = "./image/img.jpg"
+        for i in range(3):
+            try:
+                client.download_file(Bucket=bucket, Key=file_path, DestFilePath=local_path)
+                print("image download true")
+                break
+            except CosClientError or CosServiceError as e:
+                print(e)
         char, score = test_model()
-        scoreitem = Score()
-        scoreitem.user = openid
-        scoreitem.fileid = fileid
-        scoreitem.char = char
-        scoreitem.score = score
-        insert_score(scoreitem)
+        # scoreitem = Score()
+        # scoreitem.user = openid
+        # scoreitem.fileID = fileid
+        # scoreitem.char = char
+        # scoreitem.score = score
+        # insert_score(scoreitem)
     else:
         return make_err_response('action参数错误')
-    return score_char_response(char, score)
+    time = datetime()
+    if char == -1:
+        return make_err_response('服务器识别图片错误')
+    else:
+        return score_time_response(char, score, time)
 
 # 查询评分
 @app.route('/api/checkScore', methods=['POST'])

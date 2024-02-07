@@ -2,7 +2,6 @@ from datetime import datetime
 
 from wxcloudrun import db
 
-
 # 计数表
 class Counters(db.Model):
     # 设置结构体表格名称
@@ -21,7 +20,7 @@ class Score(db.Model):
     # 设定字段
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.Text)
-    fileid = db.Column(db.Text)
+    fileID = db.Column(db.Text)
     time = db.Column(db.TIMESTAMP, nullable=True, default=datetime.now())
     char = db.Column(db.Text)
     score = db.Column(db.Integer)
