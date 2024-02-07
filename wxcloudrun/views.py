@@ -25,7 +25,7 @@ def init():
     # else:
     #     print('下载模型失败')
     #     return make_err_response('初始化失败')
-    initcos()
+    client = initcos()
     return make_succ_empty_response()
 
 # 上传图片评分
@@ -65,11 +65,7 @@ def scoreImage():
     fileid = params['fileid']
     if action == 'score':
         # 下载图片
-        if (client):
-            status = download_model(client)
-        else:
-            client = initcos()
-            status = download_model(client)
+        status = download_model(client)
         if status:
             status = download_image(client, fileid)
             if status == False:
