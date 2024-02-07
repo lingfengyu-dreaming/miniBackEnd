@@ -1,4 +1,4 @@
-from qcloud_cos import CosConfig, CosS3Client
+from qcloud_cos import CosConfig, CosS3Client, CosClientError, CosServiceError
 import sys
 import os
 import logging
@@ -22,3 +22,47 @@ def initcos():
     config = CosConfig(Region=region, SecretId=sec_id, SecretKey=sec_key, Token=token, Timeout=time)
     client = CosS3Client(config)
     return client
+
+# 下载模型
+def download_model():
+    # 初始化cos
+    client = initcos()
+    # 下载模型文件
+    bucket = "7072-prod-5g5ivxm6945fbe76-1320253797"
+    model_path = "model/model-e86.pt"
+    local_path = "./model/model.pt"
+    try:
+        f = open('./model/model.pt', 'r')
+        f.close()
+        print("model load true")
+    except FileNotFoundError:
+        for i in range(0, 3):
+            try:
+                client.download_file(Bucket=bucket, Key=model_path, DestFilePath=local_path)
+                log.info("model download true")
+                return True
+            except CosClientError or CosServiceError as e:
+                log.error(e)
+                continue
+    return False
+
+# 下载图片
+def download_image(fileid):
+    ls = fileid.split('/')
+    log.info(f"ls:{ls}")
+    bucket = ls[2].split('.')[1]
+    log.info(f"bucket:{bucket}")
+    file_path = ls[3] + '/' + ls[4] + '/' + ls[5] + '/' + ls[6] + '/' + ls[7]
+    log.info(f"file:{file_path}")
+    local_path = "./image/img.jpg"
+    log.info(f"local:{local_path}")
+    for i in range(3):
+        try:
+            client = initcos()
+            client.download_file(Bucket=bucket, Key=file_path, DestFilePath=local_path)
+            log.info("image download true")
+            return True
+        except CosClientError or CosServiceError as e:
+            log.error(e)
+            continue
+    return False
