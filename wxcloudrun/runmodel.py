@@ -79,30 +79,42 @@ def test_model():
     test_path = './image/'  # 测试集路径
     batch_size = 1
     lr = 0.01
-    if torch.cuda.is_available():
-        device = 'cuda'
-    else:
-        device = 'cpu'
-    img, label = getData(test_path)
+    try:
+        if torch.cuda.is_available():
+            device = 'cuda'
+        else:
+            device = 'cpu'
+    except:
+        return -1, -2
+    try:
+        img, label = getData(test_path)
+    except:
+        return -1, -3
     # img = Image.open(img)
     if len(img) == 0:
         return -1, -1
-    dataset = MyDataset(img, label)
-    dataloader = DataLoader(dataset, batch_size)
-    model = OCR_model(6495).to(device)
-    params = filter(lambda p: p.requires_grad, model.parameters())
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(params, lr, weight_decay=1e-4)
-    model.load_state_dict(torch.load(f'./model/model.pt'))
-    model.eval()
-    with torch.no_grad():
-        for x, y in dataloader:
-            # dataset = dataset.to(device)
-            x, y = x.to(device), y.to(device)
-            pred = model(x)
-            char = pred.argmax(1)
-            score = int(pred[0][char].item()) + 1
-            return char, score
+    try:
+        dataset = MyDataset(img, label)
+        dataloader = DataLoader(dataset, batch_size)
+        model = OCR_model(6495).to(device)
+        params = filter(lambda p: p.requires_grad, model.parameters())
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(params, lr, weight_decay=1e-4)
+        model.load_state_dict(torch.load(f'./model/model.pt'))
+        model.eval()
+    except:
+        return -1, -4
+    try:
+        with torch.no_grad():
+            for x, y in dataloader:
+                # dataset = dataset.to(device)
+                x, y = x.to(device), y.to(device)
+                pred = model(x)
+                char = pred.argmax(1)
+                score = int(pred[0][char].item()) + 1
+                return char, score
+    except:
+        return -1, -5
 
 # if __name__ == '__main__':
 # epoch_input = int(input("请输入epoch"))

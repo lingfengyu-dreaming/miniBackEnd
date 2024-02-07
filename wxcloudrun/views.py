@@ -7,7 +7,10 @@ from wxcloudrun.model import Score
 from wxcloudrun.response import *
 from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import initcos
-import json
+import json, logging
+
+# 全局变量
+log = logging.getLogger('log')
 
 # 激活环境
 @app.route('/init')
@@ -31,10 +34,10 @@ def init():
         for i in range(0, 3):
             try:
                 client.download_file(Bucket=bucket, Key=model_path, DestFilePath=local_path)
-                print("model download true")
+                log.info("model download true")
                 break
             except CosClientError or CosServiceError as e:
-                print(e)
+                log.error(e)
     finally:
         return make_succ_response({"msg": "load success"})
 
@@ -75,17 +78,21 @@ def scoreImage():
     if action == 'score':
         # 下载图片
         ls = fileid.split('/')
+        log.info(f"ls:{ls}")
         bucket = ls[2].split('.')[1]
+        log.info(f"bucket:{bucket}")
         file_path = ls[3] + '/' + ls[4] + '/' + ls[5] + '/' + ls[6] + '/' + ls[7]
+        log.info(f"file:{file_path}")
         local_path = "./image/img.jpg"
+        log.info(f"local:{local_path}")
         for i in range(3):
             try:
                 client = initcos()
                 client.download_file(Bucket=bucket, Key=file_path, DestFilePath=local_path)
-                print("image download true")
+                log.info("image download true")
                 break
             except CosClientError or CosServiceError as e:
-                print(e)
+                log.error(e)
                 if i == 2:
                     return make_err_response("服务器下载图片错误")
         char, score = test_model()
@@ -99,7 +106,16 @@ def scoreImage():
         return make_err_response('action参数错误')
     time = datetime()
     if char == -1:
-        return make_err_response('服务器识别图片错误')
+        if score == -1:
+            return make_err_response('服务器识别图片错误')
+        elif score == -2:
+            return make_err_response('服务器torch错误')
+        elif score == -3:
+            return make_err_response('服务器getData错误')
+        elif score == -4:
+            return make_err_response('服务器初始化模型错误')
+        elif score == -5:
+            return make_err_response('服务器模型识别错误')
     else:
         return score_time_response(char, score, time)
 

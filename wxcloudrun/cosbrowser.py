@@ -6,7 +6,8 @@ import requests
 import json
 
 # 正常情况日志级别使用 INFO，需要定位时可以修改为 DEBUG，此时 SDK 会打印和服务端的通信信息
-logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+# logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+log = logging.getLogger('log')
 
 # 初始化cos
 def initcos():
