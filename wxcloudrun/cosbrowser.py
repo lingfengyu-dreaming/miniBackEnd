@@ -8,6 +8,7 @@ import json
 # 正常情况日志级别使用 INFO，需要定位时可以修改为 DEBUG，此时 SDK 会打印和服务端的通信信息
 # logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 log = logging.getLogger('log')
+global client
 
 # 初始化cos
 def initcos():
@@ -20,11 +21,12 @@ def initcos():
     time = info['ExpiredTime']
     region = 'ap-shanghai'
     config = CosConfig(Region=region, SecretId=sec_id, SecretKey=sec_key, Token=token, Timeout=time)
+    global client
     client = CosS3Client(config)
     return client
 
 # 下载模型
-def download_model(client):
+def download_model():
     # 初始化cos
     # client = initcos()
     # 下载模型文件
@@ -49,7 +51,7 @@ def download_model(client):
     return False
 
 # 下载图片
-def download_image(client, fileid):
+def download_image(fileid):
     ls = fileid.split('/')
     log.info(f"ls:{ls}")
     print(f'ls:{ls}')

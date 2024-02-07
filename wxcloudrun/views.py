@@ -9,9 +9,6 @@ from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import *
 import json
 
-# 全局变量，勿动
-client = initcos()
-
 # 激活环境
 @app.route('/init')
 def init():
@@ -28,6 +25,7 @@ def init():
     # else:
     #     print('下载模型失败')
     #     return make_err_response('初始化失败')
+    initcos()
     return make_succ_empty_response()
 
 # 上传图片评分
@@ -67,9 +65,9 @@ def scoreImage():
     fileid = params['fileid']
     if action == 'score':
         # 下载图片
-        status = download_model(client)
+        status = download_model()
         if status:
-            status = download_image(client, fileid)
+            status = download_image(fileid)
             if status == False:
                 print('下载图片失败')
                 return make_err_response('服务器下载图片失败')
