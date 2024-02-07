@@ -9,9 +9,6 @@ from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import initcos
 import json
 
-# 不要动，这里是全局变量
-client = None
-
 # 激活环境
 @app.route('/init')
 def init():
@@ -21,7 +18,6 @@ def init():
     # 初始化数据库
     # query_score_by_id(1)
     # 初始化cos
-    global client
     client = initcos()
     # 下载模型文件
     bucket = "7072-prod-5g5ivxm6945fbe76-1320253797"
@@ -84,11 +80,14 @@ def scoreImage():
         local_path = "./image/img.jpg"
         for i in range(3):
             try:
+                client = initcos()
                 client.download_file(Bucket=bucket, Key=file_path, DestFilePath=local_path)
                 print("image download true")
                 break
             except CosClientError or CosServiceError as e:
                 print(e)
+                if i == 2:
+                    return make_err_response("服务器下载图片错误")
         char, score = test_model()
         # scoreitem = Score()
         # scoreitem.user = openid
