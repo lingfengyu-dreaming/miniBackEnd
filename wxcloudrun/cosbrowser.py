@@ -33,12 +33,11 @@ def download_model():
     bucket = "7072-prod-5g5ivxm6945fbe76-1320253797"
     model_path = "model/model-e86.pt"
     local_path = "./model/model.pt"
-    try:
-        f = open('./model/model.pt', 'r')
-        f.close()
+    status = os.path.exists('model/model.pt')
+    if status:
         print("model load true")
-    except FileNotFoundError:
-        for i in range(0, 3):
+    else:
+        for i in range(5):
             try:
                 client.download_file(Bucket=bucket, Key=model_path, DestFilePath=local_path)
                 log.info("model download true")
