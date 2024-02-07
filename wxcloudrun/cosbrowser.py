@@ -8,7 +8,8 @@ import json
 # 正常情况日志级别使用 INFO，需要定位时可以修改为 DEBUG，此时 SDK 会打印和服务端的通信信息
 # logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 log = logging.getLogger('log')
-global client
+
+# global client
 
 # 初始化cos
 def initcos():
@@ -21,7 +22,7 @@ def initcos():
     time = info['ExpiredTime']
     region = 'ap-shanghai'
     config = CosConfig(Region=region, SecretId=sec_id, SecretKey=sec_key, Token=token, Timeout=time)
-    global client
+    # global client
     client = CosS3Client(config)
     return client
 

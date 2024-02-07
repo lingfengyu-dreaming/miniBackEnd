@@ -9,6 +9,8 @@ from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import *
 import json
 
+# client = client
+
 # 激活环境
 @app.route('/init')
 def init():
@@ -25,6 +27,7 @@ def init():
     # else:
     #     print('下载模型失败')
     #     return make_err_response('初始化失败')
+    global client
     client = initcos()
     return make_succ_empty_response()
 
