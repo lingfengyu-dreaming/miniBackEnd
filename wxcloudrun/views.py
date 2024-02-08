@@ -96,8 +96,23 @@ def scoreImage():
         return make_err_response('action参数错误')
     # time = datetime()
     if char == -1:
-        print('识别图片失败')
-        return make_err_response('服务器识别图片错误')
+        # print('识别图片失败')
+        # return make_err_response('服务器识别图片错误')
+        if score == -1:
+            print('图片数量为0')
+            return make_err_response('图片数量为0')
+        elif score == -2:
+            print('torch错误')
+            return make_err_response('torch初始化选择CPU失败')
+        elif score == -3:
+            print('getData错误')
+            return make_err_response('getData错误')
+        elif score == -4:
+            print('模型加载错误')
+            return make_err_response('模型加载错误')
+        elif score == -5:
+            print('模型运行错误')
+            return make_err_response('模型运行错误')
     else:
         return score_char_response(char, score)
         # return score_time_response(char, score, time)
