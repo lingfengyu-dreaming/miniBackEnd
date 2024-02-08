@@ -109,14 +109,14 @@ def scoreImage():
             return make_err_response('getData错误')
         elif score == -4:
             print('模型加载错误')
-            return make_err_response('模型更改模式错误')
+            return make_err_response('预测前发生错误')
         elif score == -5:
             print('模型运行错误')
             return make_err_response('模型运行错误')
         elif score == -6:
-            return make_err_response('数据设置出错')
+            return make_err_response('数据预测出错')
         elif score == -7:
-            return make_err_response('模型下载错误')
+            return make_err_response('获取分数和字出错')
     else:
         return score_char_response(char, score)
         # return score_time_response(char, score, time)
