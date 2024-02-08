@@ -7,7 +7,7 @@ from wxcloudrun.model import Score
 from wxcloudrun.response import *
 from wxcloudrun.runmodel import test_model
 from wxcloudrun.cosbrowser import *
-import json
+import json, os
 
 # client = client
 
@@ -27,6 +27,14 @@ def init():
     # else:
     #     print('下载模型失败')
     #     return make_err_response('初始化失败')
+    if os.path.exists('model'):
+        print('ok')
+    else:
+        os.mkdir('model')
+    if os.path.exists('image'):
+        print('ok')
+    else:
+        os.mkdir('image')
     global client
     client = initcos()
     return make_succ_empty_response()
