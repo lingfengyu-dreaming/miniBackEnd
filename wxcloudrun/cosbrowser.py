@@ -22,7 +22,7 @@ def initcos():
     time = info['ExpiredTime']
     region = 'ap-shanghai'
     config = CosConfig(Region=region, SecretId=sec_id, SecretKey=sec_key, Token=token, Timeout=time)
-    global client
+    # global client
     client = CosS3Client(config)
     return client
 
