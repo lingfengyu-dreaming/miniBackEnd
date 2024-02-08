@@ -113,6 +113,12 @@ def scoreImage():
         elif score == -5:
             print('模型运行错误')
             return make_err_response('模型运行错误')
+        elif score == -6:
+            return make_err_response('dataset出错')
+        elif score == -7:
+            return make_err_response('dataloader出错')
+        elif score == -8:
+            return make_err_response('OCR_model出错')
     else:
         return score_char_response(char, score)
         # return score_time_response(char, score, time)
