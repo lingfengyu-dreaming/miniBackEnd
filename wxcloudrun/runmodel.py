@@ -85,7 +85,6 @@ def test_model():
     except:
         return -1, -2
     try:
-        print("已经进行到了getData")
         img, label = getData(test_path)
     except:
         return -1, -3
@@ -99,7 +98,7 @@ def test_model():
         # params = filter(lambda p: p.requires_grad, model.parameters())
         # criterion = nn.CrossEntropyLoss()
         # optimizer = optim.Adam(params, lr, weight_decay=1e-4)
-        model.load_state_dict(torch.load(f'./model/model.pt'))
+        model.load_state_dict(torch.load(f'model/model.pt'))
         model.eval()
     except:
         return -1, -4

@@ -38,7 +38,6 @@ def download_model(client):
     if status:
         print("model load true")
     else:
-        print("这是下载时使用的参数: bucket:", bucket, ";model_path:", model_path, ";local_path", local_path)
         for i in range(10):
             try:
                 client.download_file(Bucket=bucket, Key=model_path, DestFilePath=local_path)
@@ -60,7 +59,6 @@ def download_image(client, fileid):
     file_path = ls[3] + '/' + ls[4] + '/' + ls[5] + '/' + ls[6] + '/' + ls[7]
     local_path = "image/img.jpg"
     # client = initcos()
-    print("这是下载时使用的参数: bucket:", bucket, ";file_path:", file_path, ";local_path", local_path)
     for i in range(10):
         try:
             client.download_file(Bucket=bucket, Key=file_path, DestFilePath=local_path)
