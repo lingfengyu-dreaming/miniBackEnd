@@ -12,10 +12,8 @@ from torchvision import transforms
 class MyDataset(Dataset):
     def __init__(self, images, labels):
         super(MyDataset, self).__init__()
-        self.images = images
-        self.labels = labels
-        self.images = self.images[:]
-        self.labels = self.labels[:]
+        self.images = images[:]
+        self.labels = labels[:]
 
     def __len__(self):
         return len(self.images)
@@ -40,11 +38,9 @@ def getData(data_dir):
         # 每张图片的地址的数组
         image_names += [os.path.join(root, image_path) for image_path in file_list]
     print("所有image的名字：", image_names)
-    labels = [int(file_name[len(data_dir):].split('.')[0]) for file_name in image_names]
-    random.seed(2)
-    random.shuffle(image_names)
-    random.seed(2)
-    random.shuffle(labels)
+    labels = []
+    for file_name in image_names:
+        labels.append(1)
     return image_names, labels
 
 # 模型
@@ -89,6 +85,7 @@ def test_model():
     except:
         return -1, -2
     try:
+        print("已经进行到了getData")
         img, label = getData(test_path)
     except:
         return -1, -3
