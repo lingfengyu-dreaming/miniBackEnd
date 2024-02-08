@@ -34,9 +34,10 @@ def download_model(client):
     bucket = '7072-prod-5g5ivxm6945fbe76-1320253797'
     model_path = 'model/model-e86.pt'
     local_path = 'model/model.pt'
-    status = os.path.exists('model/model.pt')
+    status = os.path.exists(local_path)
     if status:
         print("model load true")
+        return True
     else:
         for i in range(10):
             try:
