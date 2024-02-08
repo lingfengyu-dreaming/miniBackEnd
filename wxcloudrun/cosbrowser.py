@@ -27,7 +27,7 @@ def initcos():
     return client
 
 # 下载模型
-def download_model():
+def download_model(client):
     # 初始化cos
     # client = initcos()
     # 下载模型文件
