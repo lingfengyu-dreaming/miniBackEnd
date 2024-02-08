@@ -27,22 +27,22 @@ def initcos():
     return client
 
 # 下载模型
-def download_model(client):
+def download_model():
     # 初始化cos
     # client = initcos()
     # 下载模型文件
     bucket = '7072-prod-5g5ivxm6945fbe76-1320253797'
     model_path = 'model/model-e86.pt'
-    local_path = './model/model.pt'
+    local_path = '/app/model/model.pt'
     status = os.path.exists('model/model.pt')
     if status:
         print("model load true")
     else:
         # for i in range(5):
         try:
-            # client.download_file(Bucket=bucket, Key=model_path, DestFilePath=local_path)
-            res = client.get_object(Bucket=bucket, Key=model_path)
-            res['Body'].get_stream_to_file(local_path)
+            client.download_file(Bucket=bucket, Key=model_path, DestFilePath=local_path)
+            # res = client.get_object(Bucket=bucket, Key=model_path)
+            # res['Body'].get_stream_to_file(local_path)
             log.info("model download true")
             print('model download true')
             return True
@@ -69,9 +69,9 @@ def download_image(client, fileid):
     # client = initcos()
     # for i in range(3):
     try:
-        # client.download_file(Bucket=bucket, Key=file_path, DestFilePath=local_path)
-        res = client.get_object(Bucket=bucket, Key=file_path)
-        res['Body'].get_stream_to_file(local_path)
+        client.download_file(Bucket=bucket, Key=file_path, DestFilePath=local_path)
+        # res = client.get_object(Bucket=bucket, Key=file_path)
+        # res['Body'].get_stream_to_file(local_path)
         # log.info("image download true")
         # print(f'image download true')
         return True
