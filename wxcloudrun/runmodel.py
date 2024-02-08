@@ -35,9 +35,11 @@ class MyDataset(Dataset):
 # 获取数据
 def getData(data_dir):
     image_names = []
+    print("getData函数接收到的参数：", data_dir)
     for root, sub_folder, file_list in os.walk(data_dir):
         # 每张图片的地址的数组
         image_names += [os.path.join(root, image_path) for image_path in file_list]
+    print("所有image的名字：", image_names)
     labels = [int(file_name[len(data_dir):].split('.')[0]) for file_name in image_names]
     random.seed(2)
     random.shuffle(image_names)
@@ -76,7 +78,7 @@ class OCR_model(nn.Module):
 
 # 测试模型的函数
 def test_model():
-    test_path = './image/'  # 测试集路径
+    test_path = 'image/'  # 测试集路径
     batch_size = 1
     lr = 0.01
     try:
