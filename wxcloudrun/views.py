@@ -119,7 +119,7 @@ def scoreImage():
         #     return make_err_response('获取分数和字出错')
     else:
         # return score_char_response(char, score)
-        return score_time_response(char, score, time)
+        return score_time_response(char, score, time.strftime('%Y-%m-%d %H:%M:%S'))
 
 # 查询评分
 @app.route('/api/checkScore', methods=['POST'])
