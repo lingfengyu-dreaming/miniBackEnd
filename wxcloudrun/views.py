@@ -94,32 +94,32 @@ def scoreImage():
         # insert_score(scoreitem)
     else:
         return make_err_response('action参数错误')
-    # time = datetime()
+    time = datetime()
     if char == -1:
-        # print('识别图片失败')
-        # return make_err_response('服务器识别图片错误')
-        if score == -1:
-            print('图片数量为0')
-            return make_err_response('图片数量为0')
-        elif score == -2:
-            print('torch错误')
-            return make_err_response('torch初始化选择CPU失败')
-        elif score == -3:
-            print('getData错误')
-            return make_err_response('getData错误')
-        elif score == -4:
-            print('模型加载错误')
-            return make_err_response('预测前发生错误')
-        elif score == -5:
-            print('模型运行错误')
-            return make_err_response('模型运行错误')
-        elif score == -6:
-            return make_err_response('数据预测出错')
-        elif score == -7:
-            return make_err_response('获取分数和字出错')
+        print('识别图片失败')
+        return make_err_response('服务器识别图片错误')
+        # if score == -1:
+        #     print('图片数量为0')
+        #     return make_err_response('图片数量为0')
+        # elif score == -2:
+        #     print('torch错误')
+        #     return make_err_response('torch初始化选择CPU失败')
+        # elif score == -3:
+        #     print('getData错误')
+        #     return make_err_response('getData错误')
+        # elif score == -4:
+        #     print('模型加载错误')
+        #     return make_err_response('预测前发生错误')
+        # elif score == -5:
+        #     print('模型运行错误')
+        #     return make_err_response('模型运行错误')
+        # elif score == -6:
+        #     return make_err_response('数据预测出错')
+        # elif score == -7:
+        #     return make_err_response('获取分数和字出错')
     else:
-        return score_char_response(char, score)
-        # return score_time_response(char, score, time)
+        # return score_char_response(char, score)
+        return score_time_response(char, score, time)
 
 # 查询评分
 @app.route('/api/checkScore', methods=['POST'])
