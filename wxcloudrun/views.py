@@ -94,7 +94,7 @@ def scoreImage():
         # insert_score(scoreitem)
     else:
         return make_err_response('action参数错误')
-    # time = datetime()
+    time = datetime.now()
     if char == -1:
         print('识别图片失败')
         return make_err_response('服务器识别图片错误')
@@ -118,8 +118,8 @@ def scoreImage():
         # elif score == -7:
         #     return make_err_response('获取分数和字出错')
     else:
-        return score_char_response(char, score)
-        # return score_time_response(char, score, time)
+        # return score_char_response(char, score)
+        return score_time_response(char, score, time)
 
 # 查询评分
 @app.route('/api/checkScore', methods=['POST'])
